@@ -4,7 +4,7 @@ M1 情報システム論実習のワークショップのためのリポジト�
 
 LINE massagingAPIのwebhack用のサーバー兼画像認識用サーバーです。
 
-# Python パッケージダウンロード
+# Python パッケージインストール
 
 ```bash
 pip install -r requirements.lock
