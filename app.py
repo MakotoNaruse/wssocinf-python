@@ -118,15 +118,15 @@ def handle_text_message(event):
     text = event.message.text
     if text == 'getid':
         if isinstance(event.source, SourceUser):
-            line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(text="user_id is" + event.source.user_id))
+            #line_bot_api.reply_message(
+            #    event.reply_token,
+            #    TextSendMessage(text='user_id is' + event.source.user_id))
             user_dict = get_user_identity(event.source.user_id)
             line_bot_api.reply_message(
                 event.reply_token, [
                     TextSendMessage(text='id: ' + str(user_dict['id'])),
                     TextSendMessage(text='message: ' + str(user_dict['message'])),
-                    TextSendMessage(text='status: ' + str(user_dict['status']))
+                    TextSendMessage(text='status: ' + str(user_dict['status'])),
                 ]
             )
         else:
