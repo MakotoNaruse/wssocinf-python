@@ -124,9 +124,9 @@ def handle_text_message(event):
             user_dict = get_user_identity(event.source.user_id)
             line_bot_api.reply_message(
                 event.reply_token, [
-                    TextSendMessage(text='id: ' + user_dict['id']),
-                    TextSendMessage(text='message: ' + user_dict['message']),
-                    TextSendMessage(text='status: ' + user_dict['status'])
+                    TextSendMessage(text='id: ' + str(user_dict['id'])),
+                    TextSendMessage(text='message: ' + str(user_dict['message'])),
+                    TextSendMessage(text='status: ' + str(user_dict['status']))
                 ]
             )
         else:
