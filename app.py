@@ -21,7 +21,10 @@ import os
 import sys
 import tempfile
 from argparse import ArgumentParser
-
+import urllib
+from urllib import parse
+from urllib import request
+import requests
 from flask import Flask, request, abort, send_from_directory
 from werkzeug.middleware.proxy_fix import ProxyFix
 
@@ -97,6 +100,19 @@ def callback():
 
     return 'OK'
 
+#{'id': 1, 'message': 'Discovered user', 'status': 1}
+def get_user_identity(event):
+    user_id = event.source.user_id
+    param = {
+        'user_id':user_id
+    }
+    url = "https://wssocinf-5-web.herokuapp.com/api/get_user?"
+    paramStr = urllib.parse.urlencode(param)
+    user_dict = {}
+    r = requests.get(url + paramStr)
+    json_response = r.content.decode()
+    dict_json = json.loads(json_response)
+    return dict_json
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
