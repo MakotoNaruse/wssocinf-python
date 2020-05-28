@@ -101,14 +101,13 @@ def callback():
     return 'OK'
 
 #{'id': 1, 'message': 'Discovered user', 'status': 1}
-def get_user_identity(event):
-    user_id = event.source.user_id
+def get_user_identity(user_id):
+	user_id = user_id
     param = {
         'user_id':user_id
     }
     url = "https://wssocinf-5-web.herokuapp.com/api/get_user?"
     paramStr = urllib.parse.urlencode(param)
-    user_dict = {}
     r = requests.get(url + paramStr)
     json_response = r.content.decode()
     dict_json = json.loads(json_response)
@@ -117,8 +116,21 @@ def get_user_identity(event):
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
     text = event.message.text
-
-    if text == 'profile':
+	if text == 'getid':
+		if isinstance(event.source, SourceUser):
+			user_dict = get_user_identity(event.source.user_id)
+        	line_bot_api.reply_message(
+                event.reply_token, [
+                    TextSendMessage(text='id: ' + user_dict['id']),
+                    TextSendMessage(text='message: ' + user_dict['message']),
+                    TextSendMessage(text='status: ' + user_dict['status'])
+                ]
+            )
+		else:
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(text="Cannot connect to the server"))
+    elif text == 'profile':
         if isinstance(event.source, SourceUser):
             profile = line_bot_api.get_profile(event.source.user_id)
             line_bot_api.reply_message(
