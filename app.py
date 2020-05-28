@@ -102,7 +102,7 @@ def callback():
 
 #{'id': 1, 'message': 'Discovered user', 'status': 1}
 def get_user_identity(user_id):
-	user_id = user_id
+    user_id = user_id
     param = {
         'user_id':user_id
     }
@@ -116,17 +116,17 @@ def get_user_identity(user_id):
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
     text = event.message.text
-	if text == 'getid':
-		if isinstance(event.source, SourceUser):
-			user_dict = get_user_identity(event.source.user_id)
-        	line_bot_api.reply_message(
+    if text == 'getid':
+        if isinstance(event.source, SourceUser):
+            user_dict = get_user_identity(event.source.user_id)
+            line_bot_api.reply_message(
                 event.reply_token, [
                     TextSendMessage(text='id: ' + user_dict['id']),
                     TextSendMessage(text='message: ' + user_dict['message']),
                     TextSendMessage(text='status: ' + user_dict['status'])
                 ]
             )
-		else:
+        else:
             line_bot_api.reply_message(
                 event.reply_token,
                 TextSendMessage(text="Cannot connect to the server"))
