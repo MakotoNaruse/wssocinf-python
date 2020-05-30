@@ -1,0 +1,6 @@
+-r requirements.txt
+
+jupyter
+matplotlib
+flake8
+autopep8
