@@ -21,7 +21,10 @@ import os
 import sys
 import tempfile
 from argparse import ArgumentParser
-
+import urllib
+from urllib import parse
+from urllib import request
+import requests
 from flask import Flask, request, abort, send_from_directory
 from werkzeug.middleware.proxy_fix import ProxyFix
 
@@ -97,12 +100,37 @@ def callback():
 
     return 'OK'
 
+#{'id': 1, 'message': 'Discovered user', 'status': 1}
+def get_user_identity(user_id):
+    user_id = user_id
+    param = {
+        'user_id':user_id
+    }
+    url = "https://wssocinf-5-web.herokuapp.com/api/get_user?"
+    paramStr = urllib.parse.urlencode(param)
+    r = requests.get(url + paramStr)
+    json_response = r.content.decode()
+    dict_json = json.loads(json_response)
+    return dict_json
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
     text = event.message.text
-
-    if text == 'profile':
+    if text == 'getid':
+        if isinstance(event.source, SourceUser):
+            user_dict = get_user_identity(event.source.user_id)
+            line_bot_api.reply_message(
+                event.reply_token, [
+                    TextSendMessage(text='id: ' + str(user_dict['id'])),
+                    TextSendMessage(text='message: ' + str(user_dict['message'])),
+                    TextSendMessage(text='status: ' + str(user_dict['status'])),
+                ]
+            )
+        else:
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(text="Cannot connect to the server"))
+    elif text == 'profile':
         if isinstance(event.source, SourceUser):
             profile = line_bot_api.get_profile(event.source.user_id)
             line_bot_api.reply_message(
