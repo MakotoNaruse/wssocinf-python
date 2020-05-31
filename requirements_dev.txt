@@ -1,6 +1,9 @@
 -r requirements.txt
 
-jupyter
-matplotlib
 flake8
 autopep8
+jupyter
+pandas
+matplotlib
+beautifulsoup4
+docopt
