@@ -2,6 +2,7 @@
 import numpy as np
 import pickle
 from layers import Relu, Affine, SoftmaxWithLoss, Dropout, Convolution
+from functions import init_he
 
 
 class DeepConvNet:
@@ -11,23 +12,17 @@ class DeepConvNet:
             {'filter_num': 16, 'filter_size': 9, 'pad': 1, 'stride': 1},
             {'filter_num': 32, 'filter_size': 5, 'pad': 1, 'stride': 1},
             {'filter_num': 64, 'filter_size': 7, 'pad': 1, 'stride': 1}],
-        hidden_size1=128, hidden_size2=64,
+        hidden_size=[128, 64],
         output_size=5
     ):
-        pre_node_nums = np.array([3 * 9 * 9,
-                                  16 * 5 * 5,
-                                  32 * 7 * 7,
-                                  64 * 4 * 4,
-                                  hidden_size1,
-                                  hidden_size2])
-        weight_init_scales = np.sqrt(2.0 / pre_node_nums)  # ReLUを使う場合に推奨される初期値
+        image_size = input_dim[1]
 
         # init parameters and set leyers
         self.params = {}
         self.layers = {}
         pre_channel_num = input_dim[0]
         for idx, conv_param in enumerate(conv_params):
-            self.params['W' + str(idx + 1)] = np.sqrt(pre_channel_num * conv_param['filter_size'] ** 2) *\
+            self.params['W' + str(idx + 1)] = init_he(pre_channel_num * conv_param['filter_size']**2) *\
                 np.random.randn(
                     conv_param['filter_num'],
                     pre_channel_num,
@@ -43,19 +38,22 @@ class DeepConvNet:
                 conv_param[idx]['pad'])
             self.layers['Relu' + str(idx + 1)] = Relu()
 
-        self.params['W4'] = np.sqrt(2.0) * np.random.randn(pre_channel_num * 4 * 4, hidden_size1)
-        self.params['b4'] = np.zeros(hidden_size1)
+            image_size = image_size - int(conv_param['filter_size']) + conv_param['pad']
+
+        self.params['W4'] = init_he(pre_channel_num * image_size**2) *\
+            np.random.randn(pre_channel_num * image_size**2, hidden_size[0])
+        self.params['b4'] = np.zeros(hidden_size[0])
         self.layers['Affine4'] = Affine(self.params['W4'], self.params['b4'])
         self.layers['Relu4'] = Relu()
         self.layers['Dropout4'] = Dropout(0.5)
 
-        self.params['W5'] = weight_init_scales[6] * np.random.randn(64 * 4 * 4, hidden_size2)
-        self.params['b5'] = np.zeros(hidden_size2)
+        self.params['W5'] = init_he(hidden_size[0]) * np.random.randn(hidden_size[0], hidden_size[1])
+        self.params['b5'] = np.zeros(hidden_size[1])
         self.layers['Affine5'] = Affine(self.params['W5'], self.params['b5'])
         self.layers['Relu5'] = Relu()
         self.layers['Dropout5'] = Dropout(0.5)
 
-        self.params['W6'] = weight_init_scales[7] * np.random.randn(hidden_size2, output_size)
+        self.params['W6'] = init_he(hidden_size[1]) * np.random.randn(hidden_size[1], output_size)
         self.params['b6'] = np.zeros(output_size)
         self.layers['Affine6'] = Affine(self.params['W6'], self.params['b6'])
         self.layers['Dropout6'] = Dropout(0.5)
