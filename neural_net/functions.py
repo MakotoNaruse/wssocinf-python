@@ -53,3 +53,7 @@ def cross_entropy_error(y, t):
 def softmax_loss(X, t):
     y = softmax(X)
     return cross_entropy_error(y, t)
+
+
+def init_he(pre_node_num):
+    return np.sqrt(2.0 / pre_node_num)
