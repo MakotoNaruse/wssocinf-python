@@ -32,8 +32,8 @@ class DeepConvNet:
             pre_channel_num = conv_param['filter_num']
 
             self.layers['Conv' + str(idx + 1)] = Convolution(
-                self.param['W1'],
-                self.param['b1'],
+                self.params['W' + str(idx + 1)],
+                self.params['b' + str(idx + 1)],
                 conv_param[idx]['stride'],
                 conv_param[idx]['pad'])
             self.layers['Relu' + str(idx + 1)] = Relu()
