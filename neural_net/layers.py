@@ -224,7 +224,7 @@ class Convolution:
     def forward(self, x):
         FN, C, FH, FW = self.W.shape
         N, C, H, W = x.shape
-        out_h, out_w = self.output_size((C, H, W))
+        _, out_h, out_w = self.output_size((C, H, W))
 
         col = im2col(x, FH, FW, self.stride, self.pad)
         col_W = self.W.reshape(FN, -1).T
