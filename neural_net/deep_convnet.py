@@ -15,17 +15,16 @@ class DeepConvNet:
         hidden_size=[128, 64],
         output_size=5
     ):
-        image_size = input_dim[1]
-
         # init parameters and set leyers
         self.params = {}
         self.layers = {}
-        pre_channel_num = input_dim[0]
+        pre_layer_shape = input_dim
+        image_size = input_dim[1:]
         for idx, conv_param in enumerate(conv_params):
-            self.params['W' + str(idx + 1)] = init_he(pre_channel_num * conv_param['filter_size']**2) *\
+            self.params['W' + str(idx + 1)] = init_he(pre_layer_shape[0] * conv_param['filter_size']**2) *\
                 np.random.randn(
                     conv_param['filter_num'],
-                    pre_channel_num,
+                    pre_layer_shape[0],
                     conv_param['filter_size'],
                     conv_param['filter_size'])
             self.params['b' + str(idx + 1)] = np.zeros(conv_param['filter_num'])
@@ -38,7 +37,8 @@ class DeepConvNet:
                 conv_param[idx]['pad'])
             self.layers['Relu' + str(idx + 1)] = Relu()
 
-            image_size = image_size - int(conv_param['filter_size']) + conv_param['pad']
+            # calc output image size of conv layers
+            image_size = self.layers['Conv' + str(idx + 1)].output_size(image_size)
 
         self.params['W4'] = init_he(pre_channel_num * image_size**2) *\
             np.random.randn(pre_channel_num * image_size**2, hidden_size[0])
@@ -47,13 +47,15 @@ class DeepConvNet:
         self.layers['Relu4'] = Relu()
         self.layers['Dropout4'] = Dropout(0.5)
 
-        self.params['W5'] = init_he(hidden_size[0]) * np.random.randn(hidden_size[0], hidden_size[1])
+        self.params['W5'] = init_he(
+            hidden_size[0]) * np.random.randn(hidden_size[0], hidden_size[1])
         self.params['b5'] = np.zeros(hidden_size[1])
         self.layers['Affine5'] = Affine(self.params['W5'], self.params['b5'])
         self.layers['Relu5'] = Relu()
         self.layers['Dropout5'] = Dropout(0.5)
 
-        self.params['W6'] = init_he(hidden_size[1]) * np.random.randn(hidden_size[1], output_size)
+        self.params['W6'] = init_he(
+            hidden_size[1]) * np.random.randn(hidden_size[1], output_size)
         self.params['b6'] = np.zeros(output_size)
         self.layers['Affine6'] = Affine(self.params['W6'], self.params['b6'])
         self.layers['Dropout6'] = Dropout(0.5)

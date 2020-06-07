@@ -252,6 +252,11 @@ class Convolution:
 
         return dx
 
+    def output_size(self, pre_image_size):
+        h = (pre_image_size.shape[0] + self.pad * 2 - self.W.shape[2]) / self.stride + 1
+        w = (pre_image_size.shape[1] + self.pad * 2 - self.W.shape[3]) / self.stride + 1
+        return (h, w)
+
 
 class Pooling:
     def __init__(self, pool_h, pool_w, stride=1, pad=0):
