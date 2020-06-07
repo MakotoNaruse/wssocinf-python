@@ -102,9 +102,9 @@ class DeepConvNet:
         dout = 1
         dout = self.loss_layer.backward(dout)
 
-        tmp_layers = self.layers.copy()
-        tmp_layers.values().reverse()
-        for layer in tmp_layers.values():
+        tmp_layers = np.array(self.layers.values()).copy()
+        tmp_layers.reverse()
+        for layer in tmp_layers:
             dout = layer.backward(dout)
 
         # 設定
