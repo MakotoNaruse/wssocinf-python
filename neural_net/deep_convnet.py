@@ -102,16 +102,16 @@ class DeepConvNet:
         dout = 1
         dout = self.loss_layer.backward(dout)
 
-        tmp_layers = [self.layers.values()]
+        tmp_layers = list(self.layers.values())
         tmp_layers.reverse()
         for layer in tmp_layers:
             dout = layer.backward(dout)
 
         # 設定
         grads = {}
-        for i, layer_idx in enumerate(self.get_layer_index()):
-            grads['W' + str(i + 1)] = self.layers[layer_idx].dW
-            grads['b' + str(i + 1)] = self.layers[layer_idx].db
+        for i, layer_name in enumerate(self.get_layer_names()):
+            grads['W' + str(i + 1)] = self.layers[layer_name].dW
+            grads['b' + str(i + 1)] = self.layers[layer_name].db
 
         return grads
 
@@ -128,14 +128,14 @@ class DeepConvNet:
         for key, val in params.items():
             self.params[key] = val
 
-        for i, layer_idx in enumerate(self.get_layer_index()):
-            self.layers[layer_idx].W = self.params['W' + str(i + 1)]
-            self.layers[layer_idx].b = self.params['b' + str(i + 1)]
+        for i, layer_name in enumerate(self.get_layer_names()):
+            self.layers[layer_name].W = self.params['W' + str(i + 1)]
+            self.layers[layer_name].b = self.params['b' + str(i + 1)]
 
-    def get_layer_index(self):
+    def get_layer_names(self):
         lst = []
-        for i, layer in enumerate(self.layers.keys()):
-            if 'Conv' in layer or 'Affine' in layer:
-                lst.append(i)
+        for layer_name in self.layers.keys():
+            if 'Conv' in layer_name or 'Affine' in layer_name:
+                lst.append(layer_name)
 
         return np.array(lst)
