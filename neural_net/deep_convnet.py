@@ -26,7 +26,8 @@ class DeepConvNet:
                     pre_shape[0],
                     conv_param['filter_size'],
                     conv_param['filter_size'])
-            self.params['b' + str(idx + 1)] = np.zeros(conv_param['filter_num'])
+            self.params['b' + str(idx + 1)
+                        ] = np.zeros(conv_param['filter_num'])
 
             # set layers
             self.layers['Conv' + str(idx + 1)] = Convolution(
@@ -37,7 +38,8 @@ class DeepConvNet:
             self.layers['Relu' + str(idx + 1)] = Relu()
 
             # calc output image size of conv layers
-            pre_shape = self.layers['Conv' + str(idx + 1)].output_size(pre_shape)
+            pre_shape = self.layers['Conv' +
+                                    str(idx + 1)].output_size(pre_shape)
 
         # init parameters and set layers Affine4
         self.params['W4'] = init_he(pre_shape[0] * pre_shape[1]**2) *\
@@ -101,13 +103,13 @@ class DeepConvNet:
         dout = self.loss_layer.backward(dout)
 
         tmp_layers = self.layers.copy()
-        tmp_layers.reverse()
-        for layer in tmp_layers:
+        tmp_layers.values().reverse()
+        for layer in tmp_layers.values():
             dout = layer.backward(dout)
 
         # 設定
         grads = {}
-        for i, layer_idx in enumerate((0, 2, 5, 7, 10, 12, 15, 18)):
+        for i, layer_idx in enumerate(self.get_layer_index()):
             grads['W' + str(i + 1)] = self.layers[layer_idx].dW
             grads['b' + str(i + 1)] = self.layers[layer_idx].db
 
@@ -126,6 +128,14 @@ class DeepConvNet:
         for key, val in params.items():
             self.params[key] = val
 
-        for i, layer_idx in enumerate((0, 2, 5, 7, 10, 12, 15, 18)):
+        for i, layer_idx in enumerate(self.get_layer_index()):
             self.layers[layer_idx].W = self.params['W' + str(i + 1)]
             self.layers[layer_idx].b = self.params['b' + str(i + 1)]
+
+    def get_layer_index(self):
+        lst = []
+        for i, layer in enumerate(self.layers.keys()):
+            if 'Conv' in layer or 'Affine' in layer:
+                lst.append(i)
+
+        return np.array(lst)
