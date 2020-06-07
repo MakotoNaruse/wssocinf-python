@@ -224,8 +224,7 @@ class Convolution:
     def forward(self, x):
         FN, C, FH, FW = self.W.shape
         N, C, H, W = x.shape
-        out_h = 1 + int((H + 2 * self.pad - FH) / self.stride)
-        out_w = 1 + int((W + 2 * self.pad - FW) / self.stride)
+        out_h, out_w = self.output_size(x.shape[2:])
 
         col = im2col(x, FH, FW, self.stride, self.pad)
         col_W = self.W.reshape(FN, -1).T
@@ -253,8 +252,8 @@ class Convolution:
         return dx
 
     def output_size(self, pre_image_size):
-        h = (pre_image_size.shape[0] + self.pad * 2 - self.W.shape[2]) / self.stride + 1
-        w = (pre_image_size.shape[1] + self.pad * 2 - self.W.shape[3]) / self.stride + 1
+        h = int((pre_image_size[0] + self.pad * 2 - self.W.shape[2]) / self.stride) + 1
+        w = int((pre_image_size[1] + self.pad * 2 - self.W.shape[3]) / self.stride) + 1
         return (h, w)
 
 
