@@ -13,6 +13,7 @@ class DeepConvNet:
             {'filter_num': 32, 'filter_size': 5, 'pad': 1, 'stride': 1},
             {'filter_num': 64, 'filter_size': 7, 'pad': 1, 'stride': 1}],
         hidden_size=[128, 64],
+        dropout_ratio=[0.2, 0.2, 0.4],
         output_size=5
     ):
         self.params = {}
@@ -47,7 +48,7 @@ class DeepConvNet:
         self.params['b4'] = np.zeros(hidden_size[0])
         self.layers['Affine4'] = Affine(self.params['W4'], self.params['b4'])
         self.layers['Relu4'] = Relu()
-        self.layers['Dropout4'] = Dropout(0.5)
+        self.layers['Dropout4'] = Dropout(dropout_ratio[0])
 
         # init parameters and set layers Affine5
         self.params['W5'] = init_he(
@@ -55,14 +56,14 @@ class DeepConvNet:
         self.params['b5'] = np.zeros(hidden_size[1])
         self.layers['Affine5'] = Affine(self.params['W5'], self.params['b5'])
         self.layers['Relu5'] = Relu()
-        self.layers['Dropout5'] = Dropout(0.5)
+        self.layers['Dropout5'] = Dropout(dropout_ratio[1])
 
         # init parameters and set layers output
         self.params['W6'] = init_he(
             hidden_size[1]) * np.random.randn(hidden_size[1], output_size)
         self.params['b6'] = np.zeros(output_size)
         self.layers['Affine6'] = Affine(self.params['W6'], self.params['b6'])
-        self.layers['Dropout6'] = Dropout(0.5)
+        self.layers['Dropout6'] = Dropout(dropout_ratio[2])
 
         # set loss function layer
         self.loss_layer = SoftmaxWithLoss()
@@ -107,7 +108,7 @@ class DeepConvNet:
         for layer in tmp_layers:
             dout = layer.backward(dout)
 
-        # 設定
+        # setting
         grads = {}
         for i, layer_name in enumerate(self.get_layer_names()):
             grads['W' + str(i + 1)] = self.layers[layer_name].dW
