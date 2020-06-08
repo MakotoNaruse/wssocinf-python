@@ -4,4 +4,3 @@ werkzeug
 gunicorn
 numpy
 pillow
-scikit-learn
