@@ -583,9 +583,18 @@ def handle_sticker_message(event):
             sticker_id=event.message.sticker_id)
     )
 
+@handler.add(MessageEvent, message=ImageMessage)
+def handle_image_message(event):
+    message_content = line_bot_api.get_message_content(event.message.id)
+    score = 80 # get_score(path)
+    line_bot_api.reply_message(
+        event.reply_token, [
+            TextSendMessage(text='いろどりが良くておいしそう！　こっちもお腹が空いてきたわ〜.'),
+            TextSendMessage(text=str(score) + '点！')
+        ])
 
 # Other Message Type
-@handler.add(MessageEvent, message=(ImageMessage, VideoMessage, AudioMessage))
+@handler.add(MessageEvent, message=(VideoMessage, AudioMessage))
 def handle_content_message(event):
     if isinstance(event.message, ImageMessage):
         ext = 'jpg'
