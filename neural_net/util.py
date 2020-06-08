@@ -1,5 +1,6 @@
 # coding: utf-8
 import numpy as np
+from PIL import Image
 
 
 def smooth_curve(x):
@@ -112,3 +113,22 @@ def col2im(col, input_shape, filter_h, filter_w, stride=1, pad=0):
             img[:, :, y:y_max:stride, x:x_max:stride] += col[:, :, y, x, :, :]
 
     return img[:, :, pad:H + pad, pad:W + pad]
+
+
+def img_to_matrix(filename, image_size=(32, 32)):
+    img = Image.open(filename)
+    img = img.resize(image_size)
+    img_array = np.array(img)
+
+    r = img_array.copy()
+    r[:, :, (1, 2)] = 0.0
+    g = img_array.copy()
+    g[:, :, (0, 2)] = 0.0
+    b = img_array.copy()
+    b[:, :, (0, 1)] = 0.0
+    rgb = np.empty((3, image_size[0], image_size[1]))
+    np.append(rgb, r)
+    np.append(rgb, g)
+    np.append(rgb, b)
+
+    return rgb
