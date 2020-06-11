@@ -113,7 +113,6 @@ def get_user_identity(user_id):
     dict_json = json.loads(json_response)
     return dict_json
 
-help_status = 0
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
     text = event.message.text
@@ -141,9 +140,7 @@ def handle_text_message(event):
         template_message = TemplateSendMessage(
             alt_text='Confirm alt text', template=confirm_template)
         line_bot_api.reply_message(event.reply_token, template_message)
-        if help_status == 0:
-            help_status = 1
-    elif text == 'はい' and help_status == 1:
+    elif text == 'はい':
         line_bot_api.reply_message(
                 event.reply_token,
                 TextSendMessage(text="今日は何を作るのですか？"))
