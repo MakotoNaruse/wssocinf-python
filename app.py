@@ -134,13 +134,13 @@ def handle_text_message(event):
         profile = line_bot_api.get_profile(event.source.user_id)
         temp_text = str(profile.display_name) + 'さん初めまして、もう今日の晩ご飯はお決まりですか？'
         confirm_template = ConfirmTemplate(text=temp_text, actions=[
-            MessageAction(label='Yes', text='はい'),
-            MessageAction(label='No', text='いいえ'),
+            MessageAction(label='はい', text='はい'),
+            MessageAction(label='いいえ', text='いいえ'),
         ])
         template_message = TemplateSendMessage(
             alt_text='Confirm alt text', template=confirm_template)
-        #if template_message == 'はい'
-        line_bot_api.reply_message(event.reply_token, template_message)
+        if template_message == 'はい'
+            line_bot_api.reply_message(event.reply_token, '今日は何を作るのですか？')
     elif text == 'profile':
         if isinstance(event.source, SourceUser):
             profile = line_bot_api.get_profile(event.source.user_id)
