@@ -139,7 +139,7 @@ def handle_text_message(event):
         ])
         template_message = TemplateSendMessage(
             alt_text='Confirm alt text', template=confirm_template)
-        if template_message == 'はい'
+        if template_message == 'はい':
             line_bot_api.reply_message(event.reply_token, '今日は何を作るのですか？')
     elif text == 'profile':
         if isinstance(event.source, SourceUser):
