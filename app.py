@@ -131,6 +131,7 @@ def handle_text_message(event):
                 event.reply_token,
                 TextSendMessage(text="Cannot connect to the server"))
     elif text == 'こんにちは':
+        profile = line_bot_api.get_profile(event.source.user_id)
         temp_text = str(profile.display_name) + 'さん初めまして、もう今日の晩ご飯はお決まりですか？'
         confirm_template = ConfirmTemplate(text=temp_text, actions=[
             MessageAction(label='Yes', text='はい'),
