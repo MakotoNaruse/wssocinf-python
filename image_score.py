@@ -2,7 +2,7 @@ from deep_convnet import DeepConvNet
 from util import img_to_matrix
 
 
-class ImageScore():
+class ImageScore:
     def __init__(self):
         self.net = DeepConvNet()
         self.net.load_params('./neural_net/network_params.pkl')
@@ -11,7 +11,7 @@ class ImageScore():
         x = img_to_matrix(file_path)
         return self.net.predict(x)
 
-    def score(self, file_path):
+    def predict_score(self, file_path):
         x = self._predict(file_path)
 
         # 初期値(最低点)
