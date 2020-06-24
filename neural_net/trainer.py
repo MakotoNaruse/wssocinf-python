@@ -34,8 +34,8 @@ class Trainer:
         self.train_size = 0         # init in train function
         self.iter_per_epoch = 0     # init in train function
         self.max_iter = 0           # init in train function
-        self.current_iter = 0
-        self.current_epoch = 0
+        self.current_iter = 1
+        self.current_epoch = 1
 
         self.train_loss_list = []
         self.train_acc_list = []
@@ -55,8 +55,6 @@ class Trainer:
             print("train loss:{}".format(loss))
 
         if self.current_iter % self.iter_per_epoch == 0:
-            self.current_epoch += 1
-
             x_train_sample, t_train_sample = self.x_train, self.t_train
 
             if self.evaluate_sample_num_per_epoch is not None:
@@ -68,6 +66,8 @@ class Trainer:
 
             if self.verbose:
                 print("epoch:{}, train acc:{}".format(self.current_epoch, train_acc))
+
+            self.current_epoch += 1
 
         self.current_iter += 1
 
