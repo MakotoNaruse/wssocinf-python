@@ -14,12 +14,12 @@ class ImageScore:
         return self.net.predict(np.expand_dims(x, 0))
 
     def predict_score(self, file_path):
-        x = self._predict(file_path)
-        x = np.squeeze(x)
+        y = self._predict(file_path)
+        y = np.squeeze(y)
 
         score = 50
-        for i, xi in enumerate(x):
-            score += xi * (i + 1) * (50 / 5)
+        for i, yi in enumerate(y):
+            score += yi * (i + 1) * (50 / 5)
 
         return score
 
