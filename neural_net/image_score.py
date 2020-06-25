@@ -31,4 +31,4 @@ def main(file_path):
 
 
 if __name__ == "__main__":
-    main('test.jpg')
+    main('./neural_net/test.jpg')
