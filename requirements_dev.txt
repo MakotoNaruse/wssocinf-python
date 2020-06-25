@@ -1,0 +1,9 @@
+-r requirements.txt
+
+flake8
+autopep8
+rope
+jupyter
+pandas
+matplotlib
+beautifulsoup4
