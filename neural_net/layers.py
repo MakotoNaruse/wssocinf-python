@@ -119,8 +119,8 @@ class BatchNormalization:
 
     def __init__(
             self,
-            gamma,
-            beta,
+            gamma=1.0,
+            beta=0.0,
             momentum=0.9,
             running_mean=None,
             running_var=None):
