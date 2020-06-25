@@ -1,4 +1,5 @@
 from deep_convnet import DeepConvNet
+from functions import softmax
 from util import im2mat
 import numpy as np
 
@@ -16,6 +17,7 @@ class ImageScore:
     def predict_score(self, file_path):
         y = self._predict(file_path)
         y = np.squeeze(y)
+        y = softmax(y)
 
         score = 50
         for i, yi in enumerate(y):
