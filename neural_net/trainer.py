@@ -29,7 +29,8 @@ class Trainer:
             'adagrad': AdaGrad,
             'rmsprop': RMSprop,
             'adam': Adam}
-        self.optimizer = optimizer_class_dict[optimizer.lower()](** optimizer_param)
+        self.optimizer = optimizer_class_dict[optimizer.lower()](
+            ** optimizer_param)
 
         self.train_size = 0         # init in train function
         self.iter_per_epoch = 0     # init in train function
@@ -65,7 +66,10 @@ class Trainer:
             self.train_acc_list.append(train_acc)
 
             if self.verbose:
-                print("epoch:{}, train acc:{}".format(self.current_epoch, train_acc))
+                print(
+                    "epoch:{}, train acc:{}".format(
+                        self.current_epoch,
+                        train_acc))
 
             self.current_epoch += 1
 
