@@ -3,7 +3,7 @@ from util import im2mat
 
 
 class ImageScore:
-    def __init__(self):
+    def __init__(self, image_size=(32, 32)):
         self.net = DeepConvNet()
         self.net.load_params('./neural_net/network_params.pkl')
 
