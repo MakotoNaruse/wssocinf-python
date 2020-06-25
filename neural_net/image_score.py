@@ -24,6 +24,7 @@ class ImageScore:
         return score
 
 
+# test code
 def main(file_path):
     ims = ImageScore()
     print(ims.predict_score(file_path))
