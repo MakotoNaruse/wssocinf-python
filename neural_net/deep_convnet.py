@@ -1,13 +1,13 @@
 # coding: utf-8
 import numpy as np
 import pickle
-from layers import Relu, Affine, SoftmaxWithLoss, Dropout, Convolution
+from layers import Relu, Affine, SoftmaxWithLoss, Dropout, Convolution, BatchNormalization
 from functions import init_he
 
 
 class DeepConvNet:
     def __init__(
-        self, input_dim=(3, 32, 32),
+        self, input_dim,
         conv_params=[
             {'filter_num': 16, 'filter_size': 9, 'pad': 1, 'stride': 1},
             {'filter_num': 32, 'filter_size': 5, 'pad': 1, 'stride': 1},
@@ -36,6 +36,7 @@ class DeepConvNet:
                 self.params['b' + str(idx + 1)],
                 conv_param['stride'],
                 conv_param['pad'])
+            self.layers['BatchNorm' + str(idx + 1)] = BatchNormalization()
             self.layers['Relu' + str(idx + 1)] = Relu()
 
             # calc output image size of conv layers
