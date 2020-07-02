@@ -128,7 +128,7 @@ def handle_text_message(event):
             event.reply_token,
             TextSendMessage(text="Cannot connect to the server"))
         return
-    if user_dict[“situation”] == 0:
+    if user_dict['situation'] == 0:
         profile = line_bot_api.get_profile(event.source.user_id)
         confirm_template = ConfirmTemplate(text='もしかして、今晩のメニューに悩んでいるんじゃない？', actions=[
             MessageAction(label='はい', text='はい'),
