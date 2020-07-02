@@ -118,7 +118,7 @@ def handle_text_message(event):
     text = event.message.text
     if isinstance(event.source, SourceUser):
         user_dict = get_user_identity(event.source.user_id)
-        if user_dict[“status”] == 9:
+        if user_dict['status'] == 9:
             line_bot_api.reply_message(
                 event.reply_token,
                 TextSendMessage(text="Cannot connect to the server"))
