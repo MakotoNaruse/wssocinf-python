@@ -116,20 +116,45 @@ def get_user_identity(user_id):
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
     text = event.message.text
-    if text == 'getid':
-        if isinstance(event.source, SourceUser):
-            user_dict = get_user_identity(event.source.user_id)
-            line_bot_api.reply_message(
-                event.reply_token, [
-                    TextSendMessage(text='id: ' + str(user_dict['id'])),
-                    TextSendMessage(text='message: ' + str(user_dict['message'])),
-                    TextSendMessage(text='status: ' + str(user_dict['status'])),
-                ]
-            )
-        else:
+    if isinstance(event.source, SourceUser):
+        user_dict = get_user_identity(event.source.user_id)
+        if user_dict[“status”] == 9:
             line_bot_api.reply_message(
                 event.reply_token,
                 TextSendMessage(text="Cannot connect to the server"))
+            return
+    else:
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text="Cannot connect to the server"))
+        return
+    if user_dict[“situation”] == 0:
+        profile = line_bot_api.get_profile(event.source.user_id)
+        confirm_template = ConfirmTemplate(text='もしかして、今晩のメニューに悩んでいるんじゃない？', actions=[
+            MessageAction(label='はい', text='はい'),
+            MessageAction(label='いいえ', text='いいえ'),
+        ])
+        template_message = TemplateSendMessage(
+            alt_text='はい/いいえの質問', template=confirm_template)
+        line_bot_api.reply_message(
+            event.reply_token, [
+                TextSendMessage(text='こんにちは、' + profile.display_name + 'さん。私はお料理お姉さんよ。'),
+                template_message
+            ]
+    '''
+    if user_dict[“situation”] == 1:
+        profile = line_bot_api.get_profile(event.source.user_id)
+            line_bot_api.reply_message(
+                event.reply_token, [
+                    TextSendMessage(text='あら、そうなの。また料理に困ったら声をかけてね！')
+                ]
+    if user_dict[“situation”] == 1:
+        profile = line_bot_api.get_profile(event.source.user_id)
+            line_bot_api.reply_message(
+                event.reply_token, [
+                    TextSendMessage(text='じゃあ私があなたの気分から料理を提案してあげるわ！')
+                ]
+    if text == 'getid':
     elif text == 'profile':
         if isinstance(event.source, SourceUser):
             profile = line_bot_api.get_profile(event.source.user_id)
@@ -561,7 +586,7 @@ def handle_text_message(event):
     else:
         line_bot_api.reply_message(
             event.reply_token, TextSendMessage(text=event.message.text))
-
+'''
 
 @handler.add(MessageEvent, message=LocationMessage)
 def handle_location_message(event):
