@@ -140,7 +140,7 @@ def handle_text_message(event):
             event.reply_token, [
                 TextSendMessage(text='こんにちは、' + profile.display_name + 'さん。私はお料理お姉さんよ。'),
                 template_message
-            ]
+            ])
     '''
     if user_dict[“situation”] == 1:
         profile = line_bot_api.get_profile(event.source.user_id)
