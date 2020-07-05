@@ -113,9 +113,24 @@ def get_user_identity(user_id):
     dict_json = json.loads(json_response)
     return dict_json
 
+def change_situation(user_id, situation):
+    user_id = user_id
+    situation = situation
+    param = {
+        'user_id':user_id,
+        'situation':situation
+    }
+    url = "https://wssocinf-5-web.herokuapp.com/api/change_situation?"
+    paramStr = urllib.parse.urlencode(param)
+    r = requests.get(url + paramStr)
+    json_response = r.content.decode()
+    dict_json = json.loads(json_response)
+    return(dict_json)
+
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
     text = event.message.text
+    user_dict = get_user_identity(event.source.user_id)
     if text == 'getid':
         if isinstance(event.source, SourceUser):
             user_dict = get_user_identity(event.source.user_id)
@@ -130,6 +145,53 @@ def handle_text_message(event):
             line_bot_api.reply_message(
                 event.reply_token,
                 TextSendMessage(text="Cannot connect to the server"))
+    elif user_dict['situation'] == 0 and text == 'こんにちは':
+        profile = line_bot_api.get_profile(event.source.user_id)
+        change_situation(event.source.user_id, 1)
+        temp_text = str(profile.display_name) + 'さん初めまして、私はお料理お姉さんよ。もしかして、今晩のメニューに悩んでいるんじゃない？'
+        confirm_template = ConfirmTemplate(text=temp_text, actions=[
+            MessageAction(label='はい', text='はい'),
+            MessageAction(label='いいえ', text='いいえ'),
+        ])
+        template_message = TemplateSendMessage(
+            alt_text='Confirm alt text', template=confirm_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+    elif user_dict['situation'] == 1 and text == 'いいえ':
+        change_situation(event.source.user_id, 0)
+        line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(text="あら、そうなの。また料理に困ったら声をかけてね！"))
+    elif user_dict['situation'] == 1 and text == 'はい':
+        change_situation(event.source.user_id, 3)
+        temp_text = 'じゃあ私があなたの気分からお料理を提案してあげるわ！今日はお肉の気分？'
+        confirm_template = ConfirmTemplate(text=temp_text, actions=[
+            MessageAction(label='はい', text='はい'),
+            MessageAction(label='いいえ', text='いいえ'),
+        ])
+        template_message = TemplateSendMessage(
+            alt_text='Confirm alt text', template=confirm_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+    elif user_dict['situation'] == 3 and text == 'いいえ':
+        change_situation(event.source.user_id, 4)
+        temp_text = 'じゃあこの「鮭のムニエル」はいかが'
+        confirm_template = ConfirmTemplate(text=temp_text, actions=[
+            MessageAction(label='はい', text='はい'),
+            MessageAction(label='いいえ', text='いいえ'),
+        ])
+        template_message = TemplateSendMessage(
+            alt_text='Confirm alt text', template=confirm_template)
+        image_message = ImageSendMessage(
+            original_content_url='https://www.kikkoman.com/homecook/search/recipe/img/00004684.jpg',
+            preview_image_url='https://www.kikkoman.com/homecook/search/recipe/img/00004684.jpg'
+        )
+        line_bot_api.reply_message(
+            event.reply_token, [
+                template_message,
+                image_message,
+            ]
+        )
+    elif user_dict['situation'] == 3 and text == 'はい':
+        change_situation(event.source.user_id, 5)
     elif text == 'profile':
         if isinstance(event.source, SourceUser):
             profile = line_bot_api.get_profile(event.source.user_id)
