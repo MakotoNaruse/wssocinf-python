@@ -798,7 +798,7 @@ def handle_image_message(event):
     dist_name = os.path.basename(dist_path)
     os.rename(tempfile_path, dist_path)
     line_bot_api.reply_message(
-        event.reply_token, TextSendMessage(text=str(dist_path) + ' ' + str(dist_name))
+        event.reply_token, TextSendMessage(text= str(dist_path) + ' ' + str(dist_name))
     )
 
 # Other Message Type
