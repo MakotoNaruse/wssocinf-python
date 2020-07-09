@@ -799,6 +799,7 @@ def handle_image_message(event):
     os.rename(tempfile_path, dist_path)
     line_bot_api.reply_message(
         event.reply_token, TextSendMessage(text=str(dist_path) + ' ' + str(dist_name))
+    )
 
 # Other Message Type
 @handler.add(MessageEvent, message=(VideoMessage, AudioMessage))
