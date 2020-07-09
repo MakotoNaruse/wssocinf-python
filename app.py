@@ -71,6 +71,8 @@ handler = WebhookHandler(channel_secret)
 
 static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
 
+    # create image scoreing class instance
+    image_score = ImageScore()
 
 # function for create tmp dir for download content
 def make_static_tmp_dir():
@@ -717,8 +719,5 @@ if __name__ == "__main__":
 
     # create tmp dir for download content
     make_static_tmp_dir()
-
-    # create image scoreing class instance
-    image_score = ImageScore()
 
     app.run(debug=options.debug, port=options.port)
