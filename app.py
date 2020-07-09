@@ -27,6 +27,8 @@ from urllib import request
 import requests
 from flask import Flask, request, abort, send_from_directory
 from werkzeug.middleware.proxy_fix import ProxyFix
+from neural_net.image_score import ImageScore
+
 
 from linebot import (
     LineBotApi, WebhookHandler
@@ -589,10 +591,6 @@ def handle_sticker_message(event):
 def handle_content_message(event):
     if isinstance(event.message, ImageMessage):
         ext = 'jpg'
-    elif isinstance(event.message, VideoMessage):
-        ext = 'mp4'
-    elif isinstance(event.message, AudioMessage):
-        ext = 'm4a'
     else:
         return
 
@@ -603,13 +601,22 @@ def handle_content_message(event):
         tempfile_path = tf.name
 
     dist_path = tempfile_path + '.' + ext
-    dist_name = os.path.basename(dist_path)
-    os.rename(tempfile_path, dist_path)
+
+    # Image Score
+    score = image_score.predict_score(dist_path)
+
+    if score < 60:
+        text = 'う〜ん、これは{}点ね…\n次はもうちょっと高得点を出せるように頑張ろう！'.format(score)
+    elif 60 <= score and socre < 80:
+        text = '{}点よ。なかなかやるじゃない！\n次はもっと高得点を目指して頑張ろう！'.format(score)
+    elif 80 <= score and socre < 95:
+        text = '{}点よ！素晴らしい出来だわ〜\nこの調子でお料理上手を目指しましょう！'.format(score)
+    else:
+        text = 'すっごーい！{}点！\nこれ以上ない素晴らしい出来だわ！'.format(score)
 
     line_bot_api.reply_message(
         event.reply_token, [
-            TextSendMessage(text='Save content.'),
-            TextSendMessage(text=request.host_url + os.path.join('static', 'tmp', dist_name))
+            TextSendMessage(text=text),
         ])
 
 
@@ -707,5 +714,8 @@ if __name__ == "__main__":
 
     # create tmp dir for download content
     make_static_tmp_dir()
+
+    # create image scoreing class instance
+    image_score = ImageScore()
 
     app.run(debug=options.debug, port=options.port)
