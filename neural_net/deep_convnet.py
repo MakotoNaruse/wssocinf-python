@@ -9,14 +9,11 @@ class DeepConvNet:
     def __init__(
         self, input_dim,
         conv_params=[
-            {'filter_num': 16, 'filter_size': 9, 'pad': 4, 'stride': 1},
-            {'filter_num': 16, 'filter_size': 3, 'pad': 1, 'stride': 1},
-            {'filter_num': 32, 'filter_size': 5, 'pad': 2, 'stride': 1},
-            {'filter_num': 32, 'filter_size': 3, 'pad': 1, 'stride': 1},
-            {'filter_num': 64, 'filter_size': 7, 'pad': 3, 'stride': 1},
-            {'filter_num': 64, 'filter_size': 3, 'pad': 1, 'stride': 1},],
-        hidden_size=[128, 64],
-        dropout_ratio=[0.4, 0.4, 0.4],
+            {'filter_num': 32, 'filter_size': 9, 'pad': 0, 'stride': 3},
+            {'filter_num': 64, 'filter_size': 5, 'pad': 2, 'stride': 1},
+            {'filter_num': 128, 'filter_size': 7, 'pad': 0, 'stride': 1},],
+        hidden_size=128,
+        dropout_ratio=[0.2, 0.5],
         output_size=5
     ):
         self.params = {}
@@ -39,39 +36,26 @@ class DeepConvNet:
                 self.params['b' + str(idx + 1)],
                 conv_param['stride'],
                 conv_param['pad'])
-            self.layers['BatchNorm' + str(idx + 1)] = BatchNormalization()
             self.layers['Relu' + str(idx + 1)] = Relu()
 
             # calc output image size of conv layers
-            pre_shape = self.layers['Conv' +
-                                    str(idx + 1)].output_size(pre_shape)
+            pre_shape = self.layers['Conv' + str(idx + 1)].output_size(pre_shape)
 
         idx = len(conv_params)
 
         # init parameters and set layers Affine
         self.params['W' + str(idx + 1)] = init_he(pre_shape[0] * pre_shape[1]**2) *\
-            np.random.randn(pre_shape[0] * pre_shape[1]**2, hidden_size[0])
-        self.params['b' + str(idx + 1)] = np.zeros(hidden_size[0])
+            np.random.randn(pre_shape[0] * pre_shape[1]**2, hidden_size)
+        self.params['b' + str(idx + 1)] = np.zeros(hidden_size)
         self.layers['Affine' + str(idx + 1)] = Affine(self.params['W' + str(idx + 1)], self.params['b' + str(idx + 1)])
         self.layers['Relu' + str(idx + 1)] = Relu()
-        self.layers['Dropout' + str(idx + 1)] = Dropout(dropout_ratio[0])
-        idx += 1
-
-        # init parameters and set layers Affine
-        self.params['W' + str(idx + 1)] = init_he(
-            hidden_size[0]) * np.random.randn(hidden_size[0], hidden_size[1])
-        self.params['b' + str(idx + 1)] = np.zeros(hidden_size[1])
-        self.layers['Affine' + str(idx + 1)] = Affine(self.params['W' + str(idx + 1)], self.params['b' + str(idx + 1)])
-        self.layers['Relu' + str(idx + 1)] = Relu()
-        self.layers['Dropout' + str(idx + 1)] = Dropout(dropout_ratio[1])
         idx += 1
 
         # init parameters and set layers output
         self.params['W' + str(idx + 1)] = init_he(
-            hidden_size[1]) * np.random.randn(hidden_size[1], output_size)
+            hidden_size) * np.random.randn(hidden_size, output_size)
         self.params['b' + str(idx + 1)] = np.zeros(output_size)
         self.layers['Affine' + str(idx + 1)] = Affine(self.params['W' + str(idx + 1)], self.params['b' + str(idx + 1)])
-        self.layers['Dropout' + str(idx + 1)] = Dropout(dropout_ratio[2])
 
         # set loss function layer
         self.loss_layer = SoftmaxWithLoss()
