@@ -785,9 +785,23 @@ def handle_sticker_message(event):
             sticker_id=event.message.sticker_id)
     )
 
+@handler.add(MessageEvent, message=ImageMessage)
+def handle_image_message(event):
+    ext = 'jpg'
+    message_content = line_bot_api.get_message_content(event.message.id)
+    with tempfile.NamedTemporaryFile(dir=static_tmp_path, prefix=ext + '-', delete=False) as tf:
+        for chunk in message_content.iter_content():
+            tf.write(chunk)
+        tempfile_path = tf.name
+
+    dist_path = tempfile_path + '.' + ext
+    dist_name = os.path.basename(dist_path)
+    os.rename(tempfile_path, dist_path)
+    line_bot_api.reply_message(
+        event.reply_token, TextSendMessage(text='dist_path'))
 
 # Other Message Type
-@handler.add(MessageEvent, message=(ImageMessage, VideoMessage, AudioMessage))
+@handler.add(MessageEvent, message=(VideoMessage, AudioMessage))
 def handle_content_message(event):
     if isinstance(event.message, ImageMessage):
         ext = 'jpg'
