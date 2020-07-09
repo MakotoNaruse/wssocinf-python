@@ -24,7 +24,7 @@ class ImageScore:
         for i, yi in enumerate(y):
             score += yi * (i + 1) * (50 / 5)
 
-        return score
+        return round(score, 3)
 
 
 # test code
