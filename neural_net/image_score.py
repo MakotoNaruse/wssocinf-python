@@ -2,8 +2,6 @@ from deep_convnet import DeepConvNet
 from functions import softmax
 from util import im2mat
 import numpy as np
-import sys
-sys.path.append('./neural_net')
 
 
 class ImageScore:

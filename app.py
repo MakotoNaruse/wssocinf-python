@@ -14,6 +14,9 @@
 
 from __future__ import unicode_literals
 
+import sys
+sys.path.append('./neural_net')
+
 import datetime
 import errno
 import json
@@ -27,7 +30,7 @@ from urllib import request
 import requests
 from flask import Flask, request, abort, send_from_directory
 from werkzeug.middleware.proxy_fix import ProxyFix
-from neural_net.image_score import ImageScore
+from image_score import ImageScore
 
 
 from linebot import (
