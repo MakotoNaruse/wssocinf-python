@@ -9,11 +9,3 @@ LINE massagingAPIのwebhack用のサーバー兼画像認識用サーバーで�
 ```bash
 pip install -r requirements.lock
 ```
-
-# Python 開発用パッケージインストール
-
-```bash
-pip install -r requirements_dev.txt
-```
-
-```requirements_dev.txt``` also include ```requirements.txt```
