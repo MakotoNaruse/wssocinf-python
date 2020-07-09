@@ -603,7 +603,8 @@ def handle_content_message(event):
     dist_path = tempfile_path + '.' + ext
 
     # Image Score
-    score = image_score.predict_score(dist_path)
+    score = 50
+    #score = image_score.predict_score(dist_path)
 
     if score < 60:
         text = 'う〜ん、これは{}点ね…\n次はもうちょっと高得点を出せるように頑張ろう！'.format(score)
