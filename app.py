@@ -297,18 +297,11 @@ def handle_text_message(event):
         change_situation(event.source.user_id, 12)
         recipe_dict = get_recipe(4)
         temp_text = recipe_dict['recipe_text']
-        buttons_template = ButtonsTemplate(
-            thumbnail_image_url=recipe_dict['img_url'],
-            title=recipe_dict['name'], text=temp_text, actions=[
-                MessageAction(label='はい', text='はい'),
-            ]
-        )
-        template_message = TemplateSendMessage(
-            alt_text='Buttons alt text', template=buttons_template)
+        
         line_bot_api.reply_message(
             event.reply_token, [
                 TextSendMessage(text="やっぱりステーキだよね！じゃあこのレシピにしたがって作ってみるのよ！できたら写真を送ってね〜"),
-                template_message,
+                TextSendMessage(text=temp_text),
             ]
         )
 
