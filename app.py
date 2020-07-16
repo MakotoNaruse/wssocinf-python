@@ -181,26 +181,15 @@ def handle_text_message(event):
     elif user_dict['situation'] == 3 and text == 'いいえ':
         change_situation(event.source.user_id, 4)
         temp_text = 'じゃあこの「鮭のムニエル」はいかが'
-
         buttons_template = ButtonsTemplate(
-            thumbnail_image_url='https://www.kikkoman.com/homecook/search/recipe/img/00004684.jpg',
+            thumbnail_image_url='https://mi-journey.jp/foodie/wp-content/uploads/2019/10/191007salmonmeuniere12.jpg',
             title='鮭のムニエル', text=temp_text, actions=[
                 MessageAction(label='はい', text='はい'),
                 MessageAction(label='いいえ', text='いいえ'),
             ]
         )
-
-        confirm_template = ConfirmTemplate(text=temp_text, actions=[
-            MessageAction(label='はい', text='はい'),
-            MessageAction(label='いいえ', text='いいえ'),
-        ])
         template_message = TemplateSendMessage(
             alt_text='Buttons alt text', template=buttons_template)
-        
-        image_message = ImageSendMessage(
-            original_content_url='https://www.kikkoman.com/homecook/search/recipe/img/00004684.jpg',
-            preview_image_url='https://www.kikkoman.com/homecook/search/recipe/img/00004684.jpg'
-        )
         line_bot_api.reply_message(
             event.reply_token, [
                 template_message,
@@ -239,58 +228,52 @@ def handle_text_message(event):
     elif user_dict['situation'] == 5 and text == 'はい':
         change_situation(event.source.user_id, 8)
         temp_text = 'じゃあこの「ビーフウェリントン」を作ってみない？　とっても豪華なイギリスの肉料理よ！'
-        confirm_template = ConfirmTemplate(text=temp_text, actions=[
-            MessageAction(label='はい', text='はい'),
-            MessageAction(label='いいえ', text='いいえ'),
-        ])
-        template_message = TemplateSendMessage(
-            alt_text='Confirm alt text', template=confirm_template)
-        image_message = ImageSendMessage(
-            original_content_url='https://www.kikkoman.com/homecook/search/recipe/img/00004684.jpg',
-            preview_image_url='https://www.kikkoman.com/homecook/search/recipe/img/00004684.jpg'
+        buttons_template = ButtonsTemplate(
+            thumbnail_image_url='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Beef_Wellington_-_Crosscut.jpg/800px-Beef_Wellington_-_Crosscut.jpg',
+            title='ビーフウェリントン', text=temp_text, actions=[
+                MessageAction(label='はい', text='はい'),
+                MessageAction(label='いいえ', text='いいえ'),
+            ]
         )
+        template_message = TemplateSendMessage(
+            alt_text='Buttons alt text', template=buttons_template)
         line_bot_api.reply_message(
             event.reply_token, [
                 template_message,
-                image_message,
             ]
         )
     elif user_dict['situation'] == 6 and text == 'いいえ':
         change_situation(event.source.user_id, 9)
         temp_text = 'じゃあこの「タコライス」はいかが？'
-        confirm_template = ConfirmTemplate(text=temp_text, actions=[
-            MessageAction(label='はい', text='はい'),
-            MessageAction(label='いいえ', text='いいえ'),
-        ])
-        template_message = TemplateSendMessage(
-            alt_text='Confirm alt text', template=confirm_template)
-        image_message = ImageSendMessage(
-            original_content_url='https://www.kikkoman.com/homecook/search/recipe/img/00004684.jpg',
-            preview_image_url='https://www.kikkoman.com/homecook/search/recipe/img/00004684.jpg'
+        buttons_template = ButtonsTemplate(
+            thumbnail_image_url='https://upload.wikimedia.org/wikipedia/commons/4/45/Taco_Rice1.JPG',
+            title='タコライス', text=temp_text, actions=[
+                MessageAction(label='はい', text='はい'),
+                MessageAction(label='いいえ', text='いいえ'),
+            ]
         )
+        template_message = TemplateSendMessage(
+            alt_text='Buttons alt text', template=buttons_template)
         line_bot_api.reply_message(
             event.reply_token, [
                 template_message,
-                image_message,
             ]
         )
     elif user_dict['situation'] == 6 and text == 'はい':
         change_situation(event.source.user_id, 7)
         temp_text = 'じゃあこの「ビーフステーキ」がいいんじゃないかしら？'
-        confirm_template = ConfirmTemplate(text=temp_text, actions=[
-            MessageAction(label='はい', text='はい'),
-            MessageAction(label='いいえ', text='いいえ'),
-        ])
-        template_message = TemplateSendMessage(
-            alt_text='Confirm alt text', template=confirm_template)
-        image_message = ImageSendMessage(
-            original_content_url='https://www.kikkoman.com/homecook/search/recipe/img/00004684.jpg',
-            preview_image_url='https://www.kikkoman.com/homecook/search/recipe/img/00004684.jpg'
+        cbuttons_template = ButtonsTemplate(
+            thumbnail_image_url='https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/150418_Awaji_beef_at_Sumoto_Hyogo_pref_Japan02s5.jpg/800px-150418_Awaji_beef_at_Sumoto_Hyogo_pref_Japan02s5.jpg',
+            title='ビーフステーキ', text=temp_text, actions=[
+                MessageAction(label='はい', text='はい'),
+                MessageAction(label='いいえ', text='いいえ'),
+            ]
         )
+        template_message = TemplateSendMessage(
+            alt_text='Buttons alt text', template=buttons_template)
         line_bot_api.reply_message(
             event.reply_token, [
                 template_message,
-                image_message,
             ]
         )
     elif user_dict['situation'] == 7 and text == 'いいえ':
@@ -315,20 +298,18 @@ def handle_text_message(event):
                 TextSendMessage(text="やった〜！じゃあこのレシピにしたがって作ってみるのよ！できたら写真を送ってね〜"))
     elif user_dict['situation'] == 9 and text == 'いいえ':
         temp_text = 'それなら「青椒肉絲」ならどう？'
-        confirm_template = ConfirmTemplate(text=temp_text, actions=[
-            MessageAction(label='はい', text='はい'),
-            MessageAction(label='いいえ', text='いいえ'),
-        ])
-        template_message = TemplateSendMessage(
-            alt_text='Confirm alt text', template=confirm_template)
-        image_message = ImageSendMessage(
-            original_content_url='https://www.kikkoman.com/homecook/search/recipe/img/00004684.jpg',
-            preview_image_url='https://www.kikkoman.com/homecook/search/recipe/img/00004684.jpg'
+        buttons_template = ButtonsTemplate(
+            thumbnail_image_url='https://upload.wikimedia.org/wikipedia/commons/9/9d/Pepper_steak.jpg',
+            title='青椒肉絲', text=temp_text, actions=[
+                MessageAction(label='はい', text='はい'),
+                MessageAction(label='いいえ', text='いいえ'),
+            ]
         )
+        template_message = TemplateSendMessage(
+            alt_text='Buttons alt text', template=buttons_template)
         line_bot_api.reply_message(
             event.reply_token, [
                 template_message,
-                image_message,
             ]
         )
     elif user_dict['situation'] == 9 and text == 'はい':
