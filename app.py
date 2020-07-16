@@ -149,6 +149,9 @@ def get_recipe(recipe_id):
 def handle_text_message(event):
     text = event.message.text
     user_dict = get_user_identity(event.source.user_id)
+    if user_dict['time'] > 10800:
+        change_situation(event.source.user_id, 0)
+        user_dict['situation'] = 0
     if text == 'getid':
         if isinstance(event.source, SourceUser):
             user_dict = get_user_identity(event.source.user_id)
@@ -163,7 +166,7 @@ def handle_text_message(event):
             line_bot_api.reply_message(
                 event.reply_token,
                 TextSendMessage(text="Cannot connect to the server"))
-    elif user_dict['situation'] == 0 and text == 'こんにちは':
+    elif user_dict['situation'] == 0:
         profile = line_bot_api.get_profile(event.source.user_id)
         change_situation(event.source.user_id, 1)
         temp_text = str(profile.display_name) + 'さん初めまして、私はお料理お姉さんよ。もしかして、今晩のメニューに悩んでいるんじゃない？'
@@ -363,8 +366,22 @@ def handle_text_message(event):
                 TextSendMessage(text=temp_text),
             ]
         )
-    elif True:
-        change_situation(event.source.user_id, 0)
+    elif user_dict['situation'] <= 10:
+        temp_text = '「はい」か「いいえ」で答えてね！'
+        confirm_template = ConfirmTemplate(text=temp_text, actions=[
+            MessageAction(label='はい', text='はい'),
+            MessageAction(label='いいえ', text='いいえ'),
+        ])
+        template_message = TemplateSendMessage(
+            alt_text='Confirm alt text', template=confirm_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+    elif user_dict['situation'] != 0:
+        temp_text = 'できたら写真を送ってね〜'
+        line_bot_api.reply_message(
+            event.reply_token, [
+                TextSendMessage(text=temp_text),
+            ]
+        )
     elif text == 'profile':
         if isinstance(event.source, SourceUser):
             profile = line_bot_api.get_profile(event.source.user_id)
