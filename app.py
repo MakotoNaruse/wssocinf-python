@@ -14,6 +14,9 @@
 
 from __future__ import unicode_literals
 
+import sys
+sys.path.append('./neural_net')
+
 import datetime
 import errno
 import json
@@ -68,6 +71,8 @@ handler = WebhookHandler(channel_secret)
 
 static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
 
+# create image scoreing class instance
+image_score = ImageScore()
 
 # function for create tmp dir for download content
 def make_static_tmp_dir():
@@ -821,10 +826,6 @@ def handle_image_message(event):
 def handle_content_message(event):
     if isinstance(event.message, ImageMessage):
         ext = 'jpg'
-    elif isinstance(event.message, VideoMessage):
-        ext = 'mp4'
-    elif isinstance(event.message, AudioMessage):
-        ext = 'm4a'
     else:
         return
 
@@ -838,10 +839,21 @@ def handle_content_message(event):
     dist_name = os.path.basename(dist_path)
     os.rename(tempfile_path, dist_path)
 
+    # Image Score
+    score = image_score.predict_score(dist_path)
+
+    if score < 60:
+        text = 'う〜ん、これは{}点ね…\n次はもうちょっと高得点を出せるように頑張ろう！'.format(score)
+    elif 60 <= score and score < 80:
+        text = '{}点よ。なかなかやるじゃない！\n次はもっと高得点を目指して頑張ろう！'.format(score)
+    elif 80 <= score and score < 95:
+        text = '{}点よ！素晴らしい出来だわ〜\nこの調子でお料理上手を目指しましょう！'.format(score)
+    else:
+        text = 'すっごーい！{}点！\nこれ以上ない素晴らしい出来だわ！'.format(score)
+
     line_bot_api.reply_message(
         event.reply_token, [
-            TextSendMessage(text='Save content.'),
-            TextSendMessage(text=request.host_url + os.path.join('static', 'tmp', dist_name))
+            TextSendMessage(text=text),
         ])
 
 
