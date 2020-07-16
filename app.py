@@ -224,9 +224,14 @@ def handle_text_message(event):
                 TextSendMessage(text="あら、残念。じゃあまた今度ね！"))
     elif user_dict['situation'] == 4 and text == 'はい':
         change_situation(event.source.user_id, 11)
+        recipe_dict = get_recipe(1)
+        temp_text = recipe_dict['recipe_text']
         line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(text="そうこなくっちゃ！　じゃあこのレシピにしたがって作ってみるのよ！できたら写真を送ってね〜"))
+            event.reply_token, [
+                TextSendMessage(text="そうこなくっちゃ！　じゃあこのレシピにしたがって作ってみるのよ！できたら写真を送ってね〜"),
+                TextSendMessage(text=temp_text),
+            ]
+        )
     elif user_dict['situation'] == 5 and text == 'いいえ':
         change_situation(event.source.user_id, 6)
         temp_text = 'がっつりしたものが食べたいの？'
@@ -297,14 +302,12 @@ def handle_text_message(event):
         change_situation(event.source.user_id, 12)
         recipe_dict = get_recipe(4)
         temp_text = recipe_dict['recipe_text']
-        
         line_bot_api.reply_message(
             event.reply_token, [
                 TextSendMessage(text="やっぱりステーキだよね！じゃあこのレシピにしたがって作ってみるのよ！できたら写真を送ってね〜"),
                 TextSendMessage(text=temp_text),
             ]
         )
-
     elif user_dict['situation'] == 8 and text == 'いいえ':
         change_situation(event.source.user_id, 0)
         line_bot_api.reply_message(
@@ -312,9 +315,14 @@ def handle_text_message(event):
                 TextSendMessage(text="あら、残念。じゃあまた今度ね！"))
     elif user_dict['situation'] == 8 and text == 'はい':
         change_situation(event.source.user_id, 13)
+        recipe_dict = get_recipe(2)
+        temp_text = recipe_dict['recipe_text']
         line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(text="やった〜！じゃあこのレシピにしたがって作ってみるのよ！できたら写真を送ってね〜"))
+            event.reply_token, [
+                TextSendMessage(text="やった〜！じゃあこのレシピにしたがって作ってみるのよ！できたら写真を送ってね〜"),
+                TextSendMessage(text=temp_text),
+            ]
+        )
     elif user_dict['situation'] == 9 and text == 'いいえ':
         temp_text = 'それなら「青椒肉絲」ならどう？'
         buttons_template = ButtonsTemplate(
@@ -333,9 +341,14 @@ def handle_text_message(event):
         )
     elif user_dict['situation'] == 9 and text == 'はい':
         change_situation(event.source.user_id, 13)
+        recipe_dict = get_recipe(3)
+        temp_text = recipe_dict['recipe_text']
         line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(text="そうこなくっちゃ！じゃあこのレシピにしたがって作ってみるのよ！できたら写真を送ってね〜"))
+            event.reply_token, [
+                TextSendMessage(text="そうこなくっちゃ！じゃあこのレシピにしたがって作ってみるのよ！できたら写真を送ってね〜"),
+                TextSendMessage(text=temp_text),
+            ]
+        )
     elif user_dict['situation'] == 10 and text == 'いいえ':
         change_situation(event.source.user_id, 0)
         line_bot_api.reply_message(
@@ -343,9 +356,14 @@ def handle_text_message(event):
                 TextSendMessage(text="う〜ん、難しい子ねえ。また気が向いたら話しかけるのよ！"))
     elif user_dict['situation'] == 10 and text == 'はい':
         change_situation(event.source.user_id, 13)
+        recipe_dict = get_recipe(5)
+        temp_text = recipe_dict['recipe_text']
         line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(text="今日は中華に挑戦よ！じゃあこのレシピにしたがって作ってみるのよ！できたら写真を送ってね〜"))
+            event.reply_token, [
+                TextSendMessage(text="今日は中華に挑戦よ！じゃあこのレシピにしたがって作ってみるのよ！できたら写真を送ってね〜"),
+                TextSendMessage(text=temp_text),
+            ]
+        )
     elif True:
         change_situation(event.source.user_id, 0)
     elif text == 'profile':
