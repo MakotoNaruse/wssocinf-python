@@ -366,7 +366,7 @@ def handle_text_message(event):
                 TextSendMessage(text=temp_text),
             ]
         )
-    elif user_dict['situation'] != 0:
+    elif user_dict['situation'] <= 10:
         temp_text = '「はい」か「いいえ」で答えてね！'
         confirm_template = ConfirmTemplate(text=temp_text, actions=[
             MessageAction(label='はい', text='はい'),
