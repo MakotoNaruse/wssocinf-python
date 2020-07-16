@@ -795,7 +795,8 @@ def handle_sticker_message(event):
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image_message(event):
     ext = 'jpg'
-    if not (ser_dict['situation'] in [11, 12, 13, 14, 15]):
+    user_dict = get_user_identity(event.source.user_id)
+    if not (user_dict['situation'] in [11, 12, 13, 14, 15]):
         return
     message_content = line_bot_api.get_message_content(event.message.id)
     with tempfile.NamedTemporaryFile(dir=static_tmp_path, prefix=ext + '-', delete=False) as tf:
