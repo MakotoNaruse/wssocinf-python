@@ -129,10 +129,9 @@ def change_situation(user_id, situation):
     }
     url = "https://wssocinf-5-web.herokuapp.com/api/change_situation?"
     paramStr = urllib.parse.urlencode(param)
-    r = requests.get(url + paramStr)
+    r = requests.post(url + paramStr)
     json_response = r.content.decode()
     dict_json = json.loads(json_response)
-    return(dict_json)
 
 def get_recipe(recipe_id):
     recipe_id = recipe_id
