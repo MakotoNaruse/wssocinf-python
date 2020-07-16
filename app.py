@@ -795,6 +795,8 @@ def handle_sticker_message(event):
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image_message(event):
     ext = 'jpg'
+    if not (ser_dict['situation'] in [11, 12, 13, 14, 15]):
+        return
     message_content = line_bot_api.get_message_content(event.message.id)
     with tempfile.NamedTemporaryFile(dir=static_tmp_path, prefix=ext + '-', delete=False) as tf:
         for chunk in message_content.iter_content():
@@ -805,6 +807,7 @@ def handle_image_message(event):
     dist_name = os.path.basename(dist_path)
     os.rename(tempfile_path, dist_path)
     # Image Score
+    change_situation(event.source.user_id, 0)
     score = image_score.predict_score(dist_path)
 
     if score < 60:
