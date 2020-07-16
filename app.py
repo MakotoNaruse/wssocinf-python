@@ -149,7 +149,7 @@ def get_recipe(recipe_id):
 def handle_text_message(event):
     text = event.message.text
     user_dict = get_user_identity(event.source.user_id)
-    if user_dict['time'] > 1: #for test
+    if user_dict['time'] > 180:
         change_situation(event.source.user_id, 0)
         user_dict['situation'] = 0
     if text == 'getid':
