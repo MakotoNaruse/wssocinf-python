@@ -181,12 +181,22 @@ def handle_text_message(event):
     elif user_dict['situation'] == 3 and text == 'いいえ':
         change_situation(event.source.user_id, 4)
         temp_text = 'じゃあこの「鮭のムニエル」はいかが'
+
+        buttons_template = ButtonsTemplate(
+            thumbnail_image_url='https://www.kikkoman.com/homecook/search/recipe/img/00004684.jpg',
+            title='鮭のムニエル', text=temp_text, actions=[
+                MessageAction(label='はい', text='はい'),
+                MessageAction(label='いいえ', text='いいえ'),
+            ]
+        )
+
         confirm_template = ConfirmTemplate(text=temp_text, actions=[
             MessageAction(label='はい', text='はい'),
             MessageAction(label='いいえ', text='いいえ'),
         ])
         template_message = TemplateSendMessage(
-            alt_text='Confirm alt text', template=confirm_template)
+            alt_text='Buttons alt text', template=buttons_template)
+        
         image_message = ImageSendMessage(
             original_content_url='https://www.kikkoman.com/homecook/search/recipe/img/00004684.jpg',
             preview_image_url='https://www.kikkoman.com/homecook/search/recipe/img/00004684.jpg'
@@ -194,7 +204,6 @@ def handle_text_message(event):
         line_bot_api.reply_message(
             event.reply_token, [
                 template_message,
-                image_message,
             ]
         )
     elif user_dict['situation'] == 3 and text == 'はい':
