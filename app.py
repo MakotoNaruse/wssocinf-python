@@ -134,6 +134,18 @@ def change_situation(user_id, situation):
     dict_json = json.loads(json_response)
     return(dict_json)
 
+def get_recipe(recipe_id):
+    recipe_id = recipe_id
+    param = {
+        'recipe_id':recipe_id
+    }
+    url = "https://wssocinf-5-web.herokuapp.com/api/get_recipe?"
+    paramStr = urllib.parse.urlencode(param)
+    r = requests.get(url + paramStr)
+    json_response = r.content.decode()
+    dict_json = json.loads(json_response)
+    return(dict_json)
+
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
     text = event.message.text
@@ -262,7 +274,7 @@ def handle_text_message(event):
     elif user_dict['situation'] == 6 and text == 'はい':
         change_situation(event.source.user_id, 7)
         temp_text = 'じゃあこの「ビーフステーキ」がいいんじゃないかしら？'
-        cbuttons_template = ButtonsTemplate(
+        buttons_template = ButtonsTemplate(
             thumbnail_image_url='https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/150418_Awaji_beef_at_Sumoto_Hyogo_pref_Japan02s5.jpg/800px-150418_Awaji_beef_at_Sumoto_Hyogo_pref_Japan02s5.jpg',
             title='ビーフステーキ', text=temp_text, actions=[
                 MessageAction(label='はい', text='はい'),
@@ -283,9 +295,21 @@ def handle_text_message(event):
                 TextSendMessage(text="う〜ん、難しい子ねえ。また気が向いたら話しかけるのよ！"))
     elif user_dict['situation'] == 7 and text == 'はい':
         change_situation(event.source.user_id, 12)
+        recipe_dict = get_recipe(4)
+        temp_text = recipe_dict['recipe_text']
+        buttons_template = ButtonsTemplate(
+            thumbnail_image_url=recipe_dict['img_url'],
+            title=recipe_dict['name'], text=temp_text
+        )
+        template_message = TemplateSendMessage(
+            alt_text='Buttons alt text', template=buttons_template)
         line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(text="やっぱりステーキだよね！じゃあこのレシピにしたがって作ってみるのよ！できたら写真を送ってね〜"))
+            event.reply_token, [
+                TextSendMessage(text="やっぱりステーキだよね！じゃあこのレシピにしたがって作ってみるのよ！できたら写真を送ってね〜"),
+                template_message,
+            ]
+        )
+
     elif user_dict['situation'] == 8 and text == 'いいえ':
         change_situation(event.source.user_id, 0)
         line_bot_api.reply_message(
