@@ -824,10 +824,6 @@ def handle_image_message(event):
 # Other Message Type
 @handler.add(MessageEvent, message=(VideoMessage, AudioMessage))
 def handle_content_message(event):
-    if isinstance(event.message, ImageMessage):
-        ext = 'jpg'
-    else:
-        return
 
     message_content = line_bot_api.get_message_content(event.message.id)
     with tempfile.NamedTemporaryFile(dir=static_tmp_path, prefix=ext + '-', delete=False) as tf:
@@ -838,23 +834,6 @@ def handle_content_message(event):
     dist_path = tempfile_path + '.' + ext
     dist_name = os.path.basename(dist_path)
     os.rename(tempfile_path, dist_path)
-
-    # Image Score
-    score = image_score.predict_score(dist_path)
-
-    if score < 60:
-        text = 'う〜ん、これは{}点ね…\n次はもうちょっと高得点を出せるように頑張ろう！'.format(score)
-    elif 60 <= score and score < 80:
-        text = '{}点よ。なかなかやるじゃない！\n次はもっと高得点を目指して頑張ろう！'.format(score)
-    elif 80 <= score and score < 95:
-        text = '{}点よ！素晴らしい出来だわ〜\nこの調子でお料理上手を目指しましょう！'.format(score)
-    else:
-        text = 'すっごーい！{}点！\nこれ以上ない素晴らしい出来だわ！'.format(score)
-
-    line_bot_api.reply_message(
-        event.reply_token, [
-            TextSendMessage(text=text),
-        ])
 
 
 @handler.add(MessageEvent, message=FileMessage)
