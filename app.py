@@ -299,7 +299,9 @@ def handle_text_message(event):
         temp_text = recipe_dict['recipe_text']
         buttons_template = ButtonsTemplate(
             thumbnail_image_url=recipe_dict['img_url'],
-            title=recipe_dict['name'], text=temp_text
+            title=recipe_dict['name'], text=temp_text, actions=[
+                MessageAction(label='はい', text='はい'),
+            ]
         )
         template_message = TemplateSendMessage(
             alt_text='Buttons alt text', template=buttons_template)
