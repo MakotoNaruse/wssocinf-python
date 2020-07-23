@@ -216,10 +216,10 @@ def handle_text_message(event):
         change_situation(event.source.user_id, 12)
         temp_text = 'あなたは今日はベジタリアンなのね！じゃあこのお肉を使わない豆腐ハンバーグはどうかな？'
         recipe_dict = get_recipe(6)
-        img_url = recipe_dict['img_url']
+        img_url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Tofu_Hamburg_steak_20141107.jpg/200px-Tofu_Hamburg_steak_20141107.jpg'
         buttons_template = ButtonsTemplate(
             thumbnail_image_url=img_url,
-            title='ビーフウェリントン', text=temp_text, actions=[
+            title='豆腐ハンバーグ', text=temp_text, actions=[
                 MessageAction(label='はい', text='はい'),
                 MessageAction(label='いいえ', text='いいえ'),
             ]
@@ -238,7 +238,7 @@ def handle_text_message(event):
         img_url = recipe_dict['img_url']
         buttons_template = ButtonsTemplate(
             thumbnail_image_url=img_url,
-            title='ビーフウェリントン', text=temp_text, actions=[
+            title='海鮮アボカド', text=temp_text, actions=[
                 MessageAction(label='はい', text='はい'),
                 MessageAction(label='いいえ', text='いいえ'),
             ]
@@ -342,6 +342,7 @@ def handle_text_message(event):
             ]
         )
     elif user_dict['situation'] == 9 and text == 'いいえ':
+        change_situation(event.source.user_id, 10)
         temp_text = 'それなら「青椒肉絲」ならどう？'
         buttons_template = ButtonsTemplate(
             thumbnail_image_url='https://upload.wikimedia.org/wikipedia/commons/9/9d/Pepper_steak.jpg',
