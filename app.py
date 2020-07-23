@@ -194,21 +194,14 @@ def handle_text_message(event):
         line_bot_api.reply_message(event.reply_token, template_message)
     elif user_dict['situation'] == 3 and text == 'いいえ':
         change_situation(event.source.user_id, 4)
-        temp_text = 'じゃあこの「鮭のムニエル」はいかが'
-        buttons_template = ButtonsTemplate(
-            thumbnail_image_url='https://mi-journey.jp/foodie/wp-content/uploads/2019/10/191007salmonmeuniere12.jpg',
-            title='鮭のムニエル', text=temp_text, actions=[
-                MessageAction(label='はい', text='はい'),
-                MessageAction(label='いいえ', text='いいえ'),
-            ]
-        )
+        temp_text = 'じゃあ海鮮の気分？'
+        confirm_template = ConfirmTemplate(text=temp_text, actions=[
+            MessageAction(label='はい', text='はい'),
+            MessageAction(label='いいえ', text='いいえ'),
+        ])
         template_message = TemplateSendMessage(
-            alt_text='Buttons alt text', template=buttons_template)
-        line_bot_api.reply_message(
-            event.reply_token, [
-                template_message,
-            ]
-        )
+            alt_text='Confirm alt text', template=confirm_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
     elif user_dict['situation'] == 3 and text == 'はい':
         change_situation(event.source.user_id, 5)
         temp_text = 'ちょっと凝った料理に挑戦してみる？'
@@ -220,18 +213,41 @@ def handle_text_message(event):
             alt_text='Confirm alt text', template=confirm_template)
         line_bot_api.reply_message(event.reply_token, template_message)
     elif user_dict['situation'] == 4 and text == 'いいえ':
-        change_situation(event.source.user_id, 0)
-        line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(text="あら、残念。じゃあまた今度ね！"))
-    elif user_dict['situation'] == 4 and text == 'はい':
-        change_situation(event.source.user_id, 11)
-        recipe_dict = get_recipe(1)
-        temp_text = recipe_dict['recipe_text']
+        change_situation(event.source.user_id, 12)
+        temp_text = 'あなたは今日はベジタリアンなのね！じゃあこのお肉を使わない豆腐ハンバーグはどうかな？'
+        recipe_dict = get_recipe(6)
+        img_url = recipe_dict['img_url']
+        buttons_template = ButtonsTemplate(
+            thumbnail_image_url='img_url',
+            title='ビーフウェリントン', text=temp_text, actions=[
+                MessageAction(label='はい', text='はい'),
+                MessageAction(label='いいえ', text='いいえ'),
+            ]
+        )
+        template_message = TemplateSendMessage(
+            alt_text='Buttons alt text', template=buttons_template)
         line_bot_api.reply_message(
             event.reply_token, [
-                TextSendMessage(text="そうこなくっちゃ！　じゃあこのレシピにしたがって作ってみるのよ！できたら写真を送ってね〜"),
-                TextSendMessage(text=temp_text),
+                template_message,
+            ]
+        )
+    elif user_dict['situation'] == 4 and text == 'はい':
+        change_situation(event.source.user_id, 13)
+        temp_text = 'じゃあこの「海鮮アボカド」を作ってみない？'
+        recipe_dict = get_recipe(7)
+        img_url = recipe_dict['img_url']
+        buttons_template = ButtonsTemplate(
+            thumbnail_image_url='img_url',
+            title='ビーフウェリントン', text=temp_text, actions=[
+                MessageAction(label='はい', text='はい'),
+                MessageAction(label='いいえ', text='いいえ'),
+            ]
+        )
+        template_message = TemplateSendMessage(
+            alt_text='Buttons alt text', template=buttons_template)
+        line_bot_api.reply_message(
+            event.reply_token, [
+                template_message,
             ]
         )
     elif user_dict['situation'] == 5 and text == 'いいえ':
@@ -301,7 +317,7 @@ def handle_text_message(event):
                 event.reply_token,
                 TextSendMessage(text="う〜ん、難しい子ねえ。また気が向いたら話しかけるのよ！"))
     elif user_dict['situation'] == 7 and text == 'はい':
-        change_situation(event.source.user_id, 12)
+        change_situation(event.source.user_id, 11)
         recipe_dict = get_recipe(4)
         temp_text = recipe_dict['recipe_text']
         line_bot_api.reply_message(
@@ -316,7 +332,7 @@ def handle_text_message(event):
                 event.reply_token,
                 TextSendMessage(text="あら、残念。じゃあまた今度ね！"))
     elif user_dict['situation'] == 8 and text == 'はい':
-        change_situation(event.source.user_id, 13)
+        change_situation(event.source.user_id, 11)
         recipe_dict = get_recipe(2)
         temp_text = recipe_dict['recipe_text']
         line_bot_api.reply_message(
@@ -342,7 +358,7 @@ def handle_text_message(event):
             ]
         )
     elif user_dict['situation'] == 9 and text == 'はい':
-        change_situation(event.source.user_id, 13)
+        change_situation(event.source.user_id, 11)
         recipe_dict = get_recipe(3)
         temp_text = recipe_dict['recipe_text']
         line_bot_api.reply_message(
@@ -357,7 +373,7 @@ def handle_text_message(event):
                 event.reply_token,
                 TextSendMessage(text="う〜ん、難しい子ねえ。また気が向いたら話しかけるのよ！"))
     elif user_dict['situation'] == 10 and text == 'はい':
-        change_situation(event.source.user_id, 13)
+        change_situation(event.source.user_id, 11)
         recipe_dict = get_recipe(5)
         temp_text = recipe_dict['recipe_text']
         line_bot_api.reply_message(
@@ -366,7 +382,102 @@ def handle_text_message(event):
                 TextSendMessage(text=temp_text),
             ]
         )
-    elif user_dict['situation'] <= 10:
+    elif user_dict['situation'] == 12 and text == 'いいえ':
+        change_situation(event.source.user_id, 14)
+        temp_text = 'じゃあこのナスとチーズのベジタリアン料理でどうだ〜！！'
+        recipe_dict = get_recipe(8)
+        img_url = recipe_dict['img_url']
+        buttons_template = ButtonsTemplate(
+            thumbnail_image_url='img_url',
+            title='ナスとチーズのベジタリアン', text=temp_text, actions=[
+                MessageAction(label='はい', text='はい'),
+                MessageAction(label='いいえ', text='いいえ'),
+            ]
+        )
+        template_message = TemplateSendMessage(
+            alt_text='Buttons alt text', template=buttons_template)
+        line_bot_api.reply_message(
+            event.reply_token, [
+                template_message,
+            ]
+        )
+    elif user_dict['situation'] == 12 and text == 'はい':
+        change_situation(event.source.user_id, 11)
+        recipe_dict = get_recipe(6)
+        temp_text = recipe_dict['recipe_text']
+        line_bot_api.reply_message(
+            event.reply_token, [
+                TextSendMessage(text="そうこなくっちゃ！　じゃあこのレシピにしたがって作ってみるのよ。完成したら写真を送ってね〜"),
+                TextSendMessage(text=temp_text),
+            ]
+        )
+    elif user_dict['situation'] == 13 and text == 'いいえ':
+        change_situation(event.source.user_id, 15)
+        temp_text = 'じゃあこの「ガーリックシュリンプ」ならどうだ！！'
+        recipe_dict = get_recipe(9)
+        img_url = recipe_dict['img_url']
+        buttons_template = ButtonsTemplate(
+            thumbnail_image_url='img_url',
+            title='ガーリックシュリンプ', text=temp_text, actions=[
+                MessageAction(label='はい', text='はい'),
+                MessageAction(label='いいえ', text='いいえ'),
+            ]
+        )
+        template_message = TemplateSendMessage(
+            alt_text='Buttons alt text', template=buttons_template)
+        line_bot_api.reply_message(
+            event.reply_token, [
+                template_message,
+            ]
+        )
+    elif user_dict['situation'] == 13 and text == 'はい':
+        change_situation(event.source.user_id, 11)
+        recipe_dict = get_recipe(7)
+        temp_text = recipe_dict['recipe_text']
+        line_bot_api.reply_message(
+            event.reply_token, [
+                TextSendMessage(text="そうこなくっちゃ！じゃあこのレシピにしたがって作ってみるのよ！完成したら写真を送ってね〜"),
+                TextSendMessage(text=temp_text),
+            ]
+        )
+    elif user_dict['situation'] == 14 and text == 'いいえ':
+        change_situation(event.source.user_id, 0)
+        line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(text="もう！　難しいんだから！　勝手にしなさい(≧ヘ≦　)ﾌﾟｲｯ!!"))
+    elif user_dict['situation'] == 14 and text == 'はい':
+        change_situation(event.source.user_id, 11)
+        recipe_dict = get_recipe(8)
+        temp_text = recipe_dict['recipe_text']
+        line_bot_api.reply_message(
+            event.reply_token, [
+                TextSendMessage(text="じゃあこのレシピにしたがって作ってね！完成したら写真を送るのよ〜"),
+                TextSendMessage(text=temp_text),
+            ]
+        )
+    elif user_dict['situation'] == 15 and text == 'いいえ':
+        change_situation(event.source.user_id, 0)
+        line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(text="もう！　難しいんだから！　勝手にしなさい(≧ヘ≦　)ﾌﾟｲｯ!!"))
+    elif user_dict['situation'] == 15 and text == 'はい':
+        change_situation(event.source.user_id, 11)
+        recipe_dict = get_recipe(9)
+        temp_text = recipe_dict['recipe_text']
+        line_bot_api.reply_message(
+            event.reply_token, [
+                TextSendMessage(text="じゃあこのレシピにしたがって作ってね！完成したら写真を送るのよ〜"),
+                TextSendMessage(text=temp_text),
+            ]
+        )
+    elif user_dict['situation'] == 11:
+        temp_text = 'できたら写真を送ってね〜'
+        line_bot_api.reply_message(
+            event.reply_token, [
+                TextSendMessage(text=temp_text),
+            ]
+        )
+    elif user_dict['situation'] >= 1 and user_dict['situation'] <= 15:
         temp_text = '「はい」か「いいえ」で答えてね！'
         confirm_template = ConfirmTemplate(text=temp_text, actions=[
             MessageAction(label='はい', text='はい'),
@@ -375,13 +486,6 @@ def handle_text_message(event):
         template_message = TemplateSendMessage(
             alt_text='Confirm alt text', template=confirm_template)
         line_bot_api.reply_message(event.reply_token, template_message)
-    elif user_dict['situation'] != 0:
-        temp_text = 'できたら写真を送ってね〜'
-        line_bot_api.reply_message(
-            event.reply_token, [
-                TextSendMessage(text=temp_text),
-            ]
-        )
     elif text == 'profile':
         if isinstance(event.source, SourceUser):
             profile = line_bot_api.get_profile(event.source.user_id)
