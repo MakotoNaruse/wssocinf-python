@@ -218,7 +218,7 @@ def handle_text_message(event):
         recipe_dict = get_recipe(6)
         img_url = recipe_dict['img_url']
         buttons_template = ButtonsTemplate(
-            thumbnail_image_url='img_url',
+            thumbnail_image_url=img_url,
             title='ビーフウェリントン', text=temp_text, actions=[
                 MessageAction(label='はい', text='はい'),
                 MessageAction(label='いいえ', text='いいえ'),
@@ -237,7 +237,7 @@ def handle_text_message(event):
         recipe_dict = get_recipe(7)
         img_url = recipe_dict['img_url']
         buttons_template = ButtonsTemplate(
-            thumbnail_image_url='img_url',
+            thumbnail_image_url=img_url,
             title='ビーフウェリントン', text=temp_text, actions=[
                 MessageAction(label='はい', text='はい'),
                 MessageAction(label='いいえ', text='いいえ'),
@@ -388,7 +388,7 @@ def handle_text_message(event):
         recipe_dict = get_recipe(8)
         img_url = recipe_dict['img_url']
         buttons_template = ButtonsTemplate(
-            thumbnail_image_url='img_url',
+            thumbnail_image_url=img_url,
             title='ナスとチーズのベジタリアン', text=temp_text, actions=[
                 MessageAction(label='はい', text='はい'),
                 MessageAction(label='いいえ', text='いいえ'),
@@ -417,7 +417,7 @@ def handle_text_message(event):
         recipe_dict = get_recipe(9)
         img_url = recipe_dict['img_url']
         buttons_template = ButtonsTemplate(
-            thumbnail_image_url='img_url',
+            thumbnail_image_url=img_url,
             title='ガーリックシュリンプ', text=temp_text, actions=[
                 MessageAction(label='はい', text='はい'),
                 MessageAction(label='いいえ', text='いいえ'),
